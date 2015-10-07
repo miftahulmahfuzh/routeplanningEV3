@@ -13,8 +13,8 @@ int color_lib[color_number][3]={
 	{100,100,100},	//0 Putih_Arena
 	{  0,  0,  0},	//1 Hitam_Garis
 	{  0,  0,100},	//2 Biru_Start
-	{  0,100,  0},  //3 Ijo_Simpang
-	{100,  0,  0},  //4 Merah_Ujung
+	{ 22, 86, 22},  //3 Ijo_Simpang
+	{ 98, 31, 31},  //4 Merah_Ujung
 	{100,  0,100},  //5 Pink_Buntu
 //	{   ,   ,   },  //Tambahin kalo perlu, dengan nama warna yang jelas.
 	};

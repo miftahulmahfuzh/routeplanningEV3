@@ -1,13 +1,27 @@
 #pragma config(StandardModel, "EV3_REMBOT")
+#define color_number 5 //Sesuaikan
+#define color_tolerance 25
+
+int color_lib[color_number][3]={
+//  R   G   B  //Skala 0-100. kalau 0-255, tinggal kalikan 2t1. misal {  0,200*2t1,255*2t1}
+	{100,100,100},	//0 Putih_Arena
+	{  0,  0,  0},	//1 Hitam_Garis
+	{  0,  0,100},	//2 Biru_Start
+	{  22,86, 22},  //3 Ijo_Simpang
+	{100,  0,  0},  //4 Merah_Ujung
+	{100,  0,100},  //5 Pink_Buntu
+//	{   ,   ,   },  //Tambahin kalo perlu, dengan nama warna yang jelas.
+	};
 #define red 1
 #define green 0
 int searchSpot() {
 //menelusuri garis hitam sampai menemukan "color"
-	int hue,colortemp;
+	int colortemp;
 	int threshold = 65;
+	int r,g,b;
 	resetGyro(gyroSensor);
-	moveMotorTarget(leftMotor,200,100);
-	moveMotorTarget(rightMotor,200,100);
+	moveMotorTarget(leftMotor,20,100);
+	moveMotorTarget(rightMotor,20,100);
 	while(getMotorMoving(leftMotor)||getMotorMoving(rightMotor))
 		sleep(1);
 	while(1)
@@ -23,10 +37,10 @@ int searchSpot() {
 			motor[leftMotor]  = 15;
 			motor[rightMotor] = 55;
 		}
-		hue=getColorHue(colorSensor);
-		//if(hue==99 || hue==253) {
-		if(getColorName(colorSensor)==green) {
-			colortemp=hue==85?green:red;
+		getColorRGB(colorSensor,r,g,b);
+		displayTextLine(1,"R: %d, G: %d, B: %d",r,g,b)
+		if(r==22 && g==86 && b==22) {
+			colortemp = green;
 			break;
 		}
 	}
