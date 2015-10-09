@@ -5,7 +5,7 @@
 //#define 1t2 (float)255/100
 
 //Configuration
-#define color_number 5 //Sesuaikan
+#define color_number 7 //Sesuaikan
 #define color_tolerance 25
 
 int color_lib[color_number][3]={
@@ -13,9 +13,10 @@ int color_lib[color_number][3]={
 	{100,100,100},	//0 Putih_Arena
 	{  0,  0,  0},	//1 Hitam_Garis
 	{  0,  0,100},	//2 Biru_Start
-	{ 22, 86, 22},  //3 Ijo_Simpang
+	{ 0, 100, 0},  //3 Ijo_Simpang
 	{ 98, 31, 31},  //4 Merah_Ujung
 	{100,  0,100},  //5 Pink_Buntu
+	{  4, 72, 36}   //6 Ijo_Pudar
 //	{   ,   ,   },  //Tambahin kalo perlu, dengan nama warna yang jelas.
 	};
 
@@ -27,6 +28,7 @@ int check_color(){
 	long blu=0;
 
 	getColorRGB(colorSensor,red,grn,blu);//Baca warna
+  displayTextLine(1,"R: %d, G: %d, B: %d",red,grn,blu);
 	while(res==-1 && i<color_number){
 		if(red>color_lib[i][0]-color_tolerance && red<color_lib[i][0]+color_tolerance &&
 			 grn>color_lib[i][1]-color_tolerance && grn<color_lib[i][1]+color_tolerance &&
@@ -38,13 +40,22 @@ int check_color(){
 	return res;
 }
 
+void cekGaris() {
+	int a;
+	motor[leftMotor] = 0;
+	motor[rightMotor] = 0;
+	while(1) {
+		a=check_color();
+	}
+}
 
 task main()
 {
   while(true)
   {
+  	//cekGaris();
   	int a=check_color();
-    switch(a){
+  	switch(a){
     case 0:	//Putih_Arena -> Belok Kanan
     				motor[leftMotor]  = 40;
       			motor[rightMotor] = -20;
@@ -53,9 +64,10 @@ task main()
     				motor[leftMotor]  = -20;
       			motor[rightMotor] = 40;
       			break;
-    case 4: //Ijo_Simpang -> diem
+    case 3: //Ijo_Simpang -> diem
     				motor[leftMotor]  = 0;
       			motor[rightMotor] = 0;
+      			sleep(100);
       			break;
     case 5: //Hitam_Garis -> Belok Kiri
     				motor[leftMotor]  = -20;
