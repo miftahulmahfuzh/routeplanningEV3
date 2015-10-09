@@ -6,7 +6,7 @@
 
 //Configuration
 #define color_number 7 //Sesuaikan
-#define color_tolerance 25
+#define color_tolerance 40
 
 int color_lib[color_number][3]={
 //  R   G   B  //Skala 0-100. kalau 0-255, tinggal kalikan 2t1. misal {  0,200*2t1,255*2t1}
@@ -57,17 +57,18 @@ task main()
   	int a=check_color();
   	switch(a){
     case 0:	//Putih_Arena -> Belok Kanan
-    				motor[leftMotor]  = 40;
-      			motor[rightMotor] = -20;
-      			break;
-    case 1: //Hitam_Garis -> Belok Kiri
     				motor[leftMotor]  = -20;
       			motor[rightMotor] = 40;
       			break;
+    case 1: //Hitam_Garis -> Belok Kiri
+    				motor[leftMotor]  = 40;
+      			motor[rightMotor] = -20;
+      			break;
     case 3: //Ijo_Simpang -> diem
-    				motor[leftMotor]  = 0;
-      			motor[rightMotor] = 0;
-      			sleep(100);
+    				moveMotorTarget(leftMotor,40,50);
+    				moveMotorTarget(rightMotor,40,50);
+    				while(getMotorMoving(leftMotor) && getMotorMoving(rightMotor))
+    					sleep(1);
       			break;
     case 5: //Hitam_Garis -> Belok Kiri
     				motor[leftMotor]  = -20;
