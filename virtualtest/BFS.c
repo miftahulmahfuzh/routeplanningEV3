@@ -201,7 +201,7 @@ void cekSimpang(Queue *Q) {
 	if(checkLine(left)) {
 		Add(Q,left);
 	}
-	turn(right,250);
+	turn(right,270);
 }
 
 void BFS(int dirBack,Queue *Q) {
@@ -223,9 +223,8 @@ void BFS(int dirBack,Queue *Q) {
 				y=x; //first
 		}
 		if(y!=straight) {
-			stepAhead(220);
-			degree=(y==right)?85:-80;
-			turn(y,degree);
+			displayTextLine(4,"masuk");
+			checkLine(y);
 		}
 		color = searchSpot();
 		if(color==green) {
@@ -244,9 +243,8 @@ task main()
 	//turn(left,-213);
 	int color = searchSpot();
 	if(color==green) {
-		displayTextLine(2,"masuk");
 		stepAhead(220);
 		cekSimpang(&Q);
 	}
-	//BFS(first,&Q);
+	BFS(first,&Q);
 }
