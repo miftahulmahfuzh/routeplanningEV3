@@ -12,7 +12,7 @@ int color_lib[color_number][3]={
 	{100,100,100},	//0 Putih_Arena
 	{  0,  0,  0},	//1 Hitam_Garis
 	{  0,  0,100},	//2 Biru_Start
-	{  0,100,  0},  //3 Ijo_Simpang
+	{  38,52, 11},  //3 Ijo_Simpang
 	{ 98, 31, 31},  //4 Merah_Ujung
 	{100,  0,100},  //5 Pink_Buntu
 	{  4, 72, 36}   //6 Ijo_Pudar
@@ -40,7 +40,6 @@ int searchSpot() {
 //menelusuri garis hitam sampai menemukan "color"
 	int colortemp;
 	int threshold = 65;
-	resetGyro(gyroSensor);
 	moveMotorTarget(leftMotor,20,100);
 	moveMotorTarget(rightMotor,20,100);
 	while(getMotorMoving(leftMotor)||getMotorMoving(rightMotor))
@@ -71,29 +70,24 @@ int searchSpot() {
 #define right 1
 void turn(int dir,int deg,int lmot,int rmot) {
 //berbelok ke arah "dir", sebesar "deg" derajat
-	resetGyro(gyroSensor);
 	setMotorSpeed(leftMotor,lmot);
 	setMotorSpeed(rightMotor,rmot);
+	sleep(100);
 	while(getMotorMoving(leftMotor) || getMotorMoving(rightMotor)) {
-		sleep(1);
-		if((getGyroDegrees(gyroSensor)<deg && dir==left)
-			||(getGyroDegrees(gyroSensor)>deg && dir==right))
 		break;
 	}
 }
 
 int cekLine(int dir,int deg,int lmot,int rmot) {
 //mengembalikan 1 jika menemukan garis
-	int threshold = 65;
-	resetGyro(gyroSensor);
+	int threshold = 65,i=0;
 	setMotorSpeed(leftMotor,lmot);
 	setMotorSpeed(rightMotor,rmot);
 	while(getMotorMoving(leftMotor) || getMotorMoving(rightMotor)) {
 		sleep(1);
 		if(getColorReflected(colorSensor) < threshold)
 			return 1;
-		else if((getGyroDegrees(gyroSensor)<deg && dir==left)
-			||(getGyroDegrees(gyroSensor)>deg && dir==right))
+		else(i++>100)
 			break;
 	}
 	return 0;
@@ -128,5 +122,5 @@ void DFS() {
 }
 
 task main() {
-	DFS();
+	//DFS();
 }
