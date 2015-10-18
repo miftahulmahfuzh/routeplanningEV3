@@ -50,6 +50,7 @@ void Add (Queue *Q,infotype X)
 		if (Tail(*Q) == (*Q).MaxEl + 1) Tail(*Q) = 1;
 	}
 	InfoTail(*Q) = X;
+	displayTextLine(3,"Add %d to Queue",X);
 }
 void Del (Queue *Q,infotype *X)
 {
@@ -62,6 +63,7 @@ void Del (Queue *Q,infotype *X)
 		Head(*Q)++;
 		if (Head(*Q) == maxEl(*Q) + 1) Head(*Q) = 1;
 	}
+	displayTextLine(3,"Del %d from Queue",(*X));
 }
 ////////////////
 //Definitions
@@ -123,12 +125,7 @@ int searchSpot() {
       			motor[rightMotor] = 15;
       			break;
     case 3: //Ijo_Simpang -> diem
-    				motor[leftMotor] =0;
-    				motor[rightMotor] =0;
-    				sleep(10);
-    				while(getMotorMoving(leftMotor) && getMotorMoving(rightMotor))
-    					sleep(1);
-      			break;
+    				return a;
     case 4: //Merah_ujung -> Balik kanan
     				motor[leftMotor] = 100;
     				motor[rightMotor] = -100;
@@ -165,18 +162,17 @@ int checkLine(int dir) {
 	while((degmax<2300&&dir==right) || (degmax>-2300&&dir==left)) {
 		a=check_color();
 		switch(a) {
- 		case 0:
+      case 1:
+    		motor[leftMotor]=0;
+    		motor[rightMotor]=180;
+    		sleep(100);
+    		return 1;
+    	default:
  				moveMotorTarget(leftMotor,-rightdegree,-rightpower);
   			moveMotorTarget(rightMotor,rightdegree,rightpower);
   			while(getMotorMoving(leftMotor) && getMotorMoving(rightMotor))
     			sleep(1);
     		degmax+=incdegree;
-    		break;
-    case 1:
-    		motor[leftMotor]=0;
-    		motor[rightMotor]=0;
-    		sleep(100);
-    		return 1;
   	}
  	}
  	return 0;
@@ -192,18 +188,20 @@ void stepAhead(int degree) {
 }
 
 void cekSimpang(Queue *Q) {
-	if(checkLine(right)==1) {
+	displayTextLine(3,"cekSimpang running");
+	if(!checkLine(right)) {
 		Add(Q,right);
-		turn(left,-730);	//A: this is so the color sensor
+		turn(left,-31);	//A: this is so the color sensor
 		//call checkLine function below outside the blackline
 	}
 	if(checkLine(left)) {
 		Add(Q,straight);
-		turn(right,73); //same as A
+		turn(right,31); //same as A
 	}
-	if(checkLine(left))
+	if(checkLine(left)) {
 		Add(Q,left);
-	turn(right,90);
+	}
+	turn(right,250);
 }
 
 void BFS(int dirBack,Queue *Q) {
@@ -243,14 +241,12 @@ task main()
 {
 	Queue Q;
 	CreateEmpty(&Q);
-	cekSimpang(&Q);
 	//turn(left,-213);
-	//int color = searchSpot();
-	/*int cek = checkLine(right);
+	int color = searchSpot();
 	if(color==green) {
+		displayTextLine(2,"masuk");
 		stepAhead(220);
-		turn(right,20);
 		cekSimpang(&Q);
 	}
-	BFS(first,&Q);*/
+	//BFS(first,&Q);
 }
