@@ -90,7 +90,6 @@ int check_color(){
 	long red=0;
 	long grn=0;
 	long blu=0;
-
 	getColorRGB(colorSensor,red,grn,blu);//Baca warna
   displayTextLine(1,"R: %d, G: %d, B: %d",red,grn,blu);
 	while(res==-1 && i<color_number){
@@ -124,8 +123,6 @@ int searchSpot() {
       			motor[rightMotor] = 15;
       			break;
     case 3: //Ijo_Simpang -> diem
-    				//moveMotorTarget(leftMotor,180,50);
-    				//moveMotorTarget(rightMotor,-180,-50);
     				motor[leftMotor] =0;
     				motor[rightMotor] =0;
     				sleep(10);
@@ -148,8 +145,8 @@ int searchSpot() {
 
 #define left 0
 #define right 1
-#define straight -1
 #define first -2
+#define straight -1
 void turn(int direction,int degree) {
 //berbelok ke arah "direction", sebesar "degree"
 	int rightpower=direction==right?-71:71;
@@ -182,8 +179,8 @@ int checkLine(int dir) {
     		return 1;
   	}
  	}
+ 	return 0;
 }
-
 
 void stepAhead(int degree) {
 //maju degree derajat putaran roda
@@ -195,11 +192,14 @@ void stepAhead(int degree) {
 }
 
 void cekSimpang(Queue *Q) {
-	if(checkLine(right)) {
+	if(checkLine(right)==1) {
 		Add(Q,right);
+		turn(left,-730);	//A: this is so the color sensor
+		//call checkLine function below outside the blackline
 	}
 	if(checkLine(left)) {
 		Add(Q,straight);
+		turn(right,73); //same as A
 	}
 	if(checkLine(left))
 		Add(Q,left);
@@ -243,7 +243,7 @@ task main()
 {
 	Queue Q;
 	CreateEmpty(&Q);
-	checkLine(left);
+	cekSimpang(&Q);
 	//turn(left,-213);
 	//int color = searchSpot();
 	/*int cek = checkLine(right);
